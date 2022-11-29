@@ -1,0 +1,106 @@
+﻿@page "/"
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model ServiceTestTask.Pages.Tasks.IndexModel
+
+
+@{
+    ViewData["Title"] = "Главная";
+}
+
+<h1>Список задач</h1>
+
+<table class="table">
+    <tr>
+        <td>
+            <a asp-page="Create">Создать задачу</a>
+        </td>
+
+        <td>
+            <form method="post" asp-page-handler="Search">
+                <label asp-for="SearchString">Поиск:</label>
+                <input asp-for="SearchString" type="search" placeholder="Введите слово"/>
+                <input type="button" id="FilterButton" value="Фильтр" onclick="ShowFilterForm()" />
+            </form>
+
+            <script>
+                function ShowFilterForm() {
+                    var modalWin = document.getElementById('FilterForm');
+                    if (modalWin.style.display == 'block')
+                        modalWin.style.display = 'none';
+                    else
+                        modalWin.style.display = 'block';
+                }
+            </script>
+            
+            <div id="FilterForm" style="width: 400px; border: 3px outset black; margin: 0 auto; display: none;
+                    text-align: center; z-index: 1; position: fixed; background-color: white">
+                <form method="post" id="FilterForm">
+                    <label asp-for="StatusFilter">Статус:</label>
+                    <input type="radio" asp-for="StatusFilter" value="0" checked /> Новая
+                    <input type="radio" asp-for="StatusFilter" value="1" /> В работе
+                    <input type="radio" asp-for="StatusFilter" value="2" /> Выполнено <br>
+
+                    <label asp-for="WorkerFilter">Исполнитель:</label>
+                    <input asp-for="WorkerFilter" type="text" value="@Model.WorkerFilter" placeholder="Введите исполнителя" /> <br>
+
+                    <label asp-for="DateFilter">Срок выполнения:</label>
+                    <input asp-for="DateFilter" type="date" value="@Model.DateFilter"/> <br>
+                    
+                    <input asp-page-handler="Filter" type="submit" value="Сохранить" />
+                    <input asp-page-handler="Reset" type="submit" value="Сбросить"/>
+                </form>
+            </div>
+            
+        </td>
+    </tr>
+</table>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Заголовок
+            </th>
+            <th>
+                Описание
+            </th>
+            <th>
+                Исполнитель
+            </th>
+            <th>
+                Статус
+            </th>
+            <th>
+                Срок выполнения
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Task) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Worker)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date.Date)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.TaskID">Изменить</a> |
+                <a asp-page="./Details" asp-route-id="@item.TaskID">Сведения</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+

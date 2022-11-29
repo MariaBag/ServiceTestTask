@@ -1,0 +1,103 @@
+﻿@page
+@model ServiceTestTask.Pages.Tasks.DetailsModel
+
+@{
+    ViewData["Title"] = "Сведения";
+}
+
+<h1>Сведения о задаче</h1>
+
+<div>
+    <h4>Задача</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Заголовок
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Task.Name)
+        </dd>
+        <dt class="col-sm-2">
+            Описание
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Task.Description)
+        </dd>
+        <dt class="col-sm-2">
+            Исполнитель
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Task.Worker)
+        </dd>
+        <dt class="col-sm-2">
+            Статус
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Task.Status)
+        </dd>
+        <dt class="col-sm-2">
+            Срок выполнения
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Task.Date)
+        </dd>
+        <dt class="col-sm-2">
+            Комментарии
+        </dt>
+        <dd class="col-sm-10">
+            <table class="table">
+                <tr>
+                    <th>Отправитель</th>
+                    <th>Комментарий</th>
+                </tr>
+                @foreach (var item in Model.Task.Comments)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CommentText)
+                        </td>
+                    </tr>
+                }
+            </table>
+            <input type="button" value="Добавить комментарий" class="btn btn-primary" onclick="ShowCommentForm()" />
+
+            <script>
+                function ShowCommentForm() {
+                    var modalWin = document.getElementById('CommentForm');
+                    if (modalWin.style.display == 'block')
+                        modalWin.style.display = 'none';
+                    else
+                        modalWin.style.display = 'block';
+                }
+            </script>
+
+            <div id="CommentForm" style="width: 400px; border: 3px outset black; display: none;
+                    text-align: center; z-index: 1; background-color: white">
+                <form method="post" id="CommentForm">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <label asp-for="Comment.Name">Имя:</label>
+                    <input type="text" asp-for="Comment.Name" value="" placeholder="Введите ваше имя" /> <br>
+                    <span asp-validation-for="Comment.Name" class="text-danger"></span>
+                    <label asp-for="Comment.CommentText">Комментарий:</label>
+                    <input type="text" asp-for="Comment.CommentText" value="" placeholder="Комментарий" /> <br>
+                    <span asp-validation-for="Comment.CommentText" class="text-danger"></span>
+                    <input type="submit" value="Добавить"/>
+                </form>
+            </div>
+
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.Task?.TaskID">Изменить</a> |
+    <a asp-page="./Index">Назад</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

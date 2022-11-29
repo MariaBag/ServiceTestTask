@@ -1,0 +1,68 @@
+﻿@page
+@model ServiceTestTask.Pages.Tasks.EditModel
+
+@{
+    ViewData["Title"] = "Изменить";
+}
+
+<h1>Изменить</h1>
+
+<h4>Задача</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+            Заголовок: <br>
+            @Html.DisplayFor(model => model.Task.Name)<br>
+            Описание:<br>
+            @Html.DisplayFor(model => model.Task.Description)
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Task.TaskID" />
+            <div class="form-group">
+                <label asp-for="Task.Worker" class="control-label">Исполнитель</label>
+                <input asp-for="Task.Worker" class="form-control" />
+                <span asp-validation-for="Task.Worker" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Task.Status" class="control-label">Статус</label>
+                @if (Model.Task.Status == Models.Status.Новая)
+                {
+                    <select asp-for="Task.Status" class="form-control">
+                        <option value="0">Новая</option>
+                        <option value="1">В работе</option>
+                    </select>
+                }
+                else if (Model.Task.Status == Models.Status.Вработе)
+                {
+                    <select asp-for="Task.Status" class="form-control">
+                        <option value="1">В работе</option>
+                        <option value="2">Выполнено</option>
+                    </select>
+                }
+                else
+                {
+                    <select asp-for="Task.Status" class="form-control">
+                        <option value="2">Выполнено</option>
+                    </select>
+                }
+                <span asp-validation-for="Task.Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Task.Date" class="control-label">Срок выполнения</label>
+                <input asp-for="Task.Date" class="form-control" type="date"/>
+                <span asp-validation-for="Task.Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Сохранить" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Назад</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
